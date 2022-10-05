@@ -5,16 +5,13 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.exception.GenericException;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
-
 
 @Component
 public class TokenGenerator {
@@ -22,16 +19,29 @@ public class TokenGenerator {
 
     @Value("${jwt-variables.KEY}")
     private String KEY;
+    // kitaplik
 
     @Value("${jwt-variables.ISSUER}")
     private String ISSUER;
+    // folksdev
 
     @Value("${jwt-variables.EXPIRES_ACCESS_TOKEN_MINUTE}")
     private Integer EXPIRES_ACCESS_TOKEN_MINUTE;
+    // 1
 
 
     public String generateToken(Authentication auth) {
+
+        /*
+        ( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).toString();
+        Authentication aaa = SecurityContextHolder.getContext().getAuthentication();
+        */
+        //System.out.println(((User) auth.getPrincipal()).getPassword());
+
+
         String username = ((UserDetails) auth.getPrincipal()).getUsername();
+       // System.out.println(username);
+
         return JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + (EXPIRES_ACCESS_TOKEN_MINUTE * 60 * 1000)))
@@ -40,15 +50,23 @@ public class TokenGenerator {
     }
 
 
+
     public DecodedJWT verifyJWT(String token) {
+
         Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
-        JWTVerifier verifier = JWT.require(algorithm).acceptExpiresAt(20).build();
+        JWTVerifier verifier = JWT.require(algorithm)
+               // .acceptExpiresAt(20)
+                .build();
         try {
             return verifier.verify(token);
         } catch (Exception e) {
-            throw GenericException.builder().httpStatus(HttpStatus.BAD_REQUEST).errorMessage(e.getMessage()).build();
+            throw GenericException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .errorMessage(e.getMessage())
+                    .build();
         }
     }
+
 
 
 

@@ -59,7 +59,7 @@ public class BookRestController {
 
 
     @GetMapping("/searchByBookStatus")
-    public ResponseEntity<List<BookResponse>> searchByBookStatus(@RequestParam(name = "bookstatus") BookStatus bookStatus){
+    public ResponseEntity<List<BookResponse>> searchByBookStatus(@RequestParam(name = "bookstatus") BookStatus bookStatus ){
         return ResponseEntity.ok(bookService.searchByBookStatus(bookStatus));
     }
 

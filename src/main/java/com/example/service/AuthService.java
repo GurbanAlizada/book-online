@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,22 +32,28 @@ public class AuthService {
 
     public TokenResponseDto login(LoginRequest loginRequest) {
         try {
-            Authentication auth = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
             return TokenResponseDto
                     .builder()
                     .token(tokenGenerator.generateToken(auth))
                     .userDto(userService.getUserDto(loginRequest.getUsername()))
                     .build();
         } catch (final BadCredentialsException badCredentialsException) {
-            throw GenericException.builder().httpStatus(HttpStatus.NOT_FOUND).errorCode(ErrorCode.USER_NOT_FOUNDED).errorMessage("Invalid Username or Password").build();
+            throw GenericException.builder()
+                    .httpStatus(HttpStatus.NOT_FOUND)
+                    .errorCode(ErrorCode.USER_NOT_FOUNDED)
+                    .errorMessage("Invalid Username or Password !!!")
+                    .build();
         }
     }
 
     public UserDto getAuthenticatedUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         return userService.getUserDto(username);
     }
+
+
 
 
 }

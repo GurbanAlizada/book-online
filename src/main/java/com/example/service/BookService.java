@@ -9,9 +9,11 @@ import com.example.exception.GenericException;
 import com.example.model.Book;
 import com.example.model.BookStatus;
 import com.example.model.Category;
+import com.example.model.User;
 import com.example.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,8 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final CategoryService categoryService;
+    private final AuthService authService;
+    private final UserService userService;
 
 
 
@@ -62,6 +66,8 @@ public class BookService {
     public List<BookResponse> listBooks(int pageNo , int size){
 
         final List<Book> books =  bookRepository.findAll(PageRequest.of(pageNo - 1 , size)).getContent();
+
+        User user = userService.findByUserName(authService.getAuthenticatedUser().getUsername());
 
         List<BookResponse> result =  books.stream()
                 .map(n->
@@ -120,9 +126,11 @@ public class BookService {
 
 
 
-    public List<BookResponse> searchByBookStatus(BookStatus bookStatus){
+    public List<BookResponse> searchByBookStatus(BookStatus bookStatus ){
 
-        List<Book> books = bookRepository.getByBookStatus(bookStatus).orElseThrow(()-> new GenericException(HttpStatus.BAD_REQUEST , ErrorCode.BOOK_STATUS_NOT_FOUNDED));
+        User user = userService.findByUserName(authService.getAuthenticatedUser().getUsername());
+
+        List<Book> books = bookRepository.getByBookStatusAndUser_Id(bookStatus , user.getId()).orElseThrow(()-> new GenericException(HttpStatus.BAD_REQUEST , ErrorCode.BOOK_STATUS_NOT_FOUNDED));
 
         List<BookResponse> result = books.stream()
                 .map(n->
@@ -162,8 +170,8 @@ public class BookService {
 
         return BookResponse.builder()
                 .id(bookId)
-                .authorName(book.getAuthorName())
-                .title(book.getTitle())
+                .authorName(fromDb.getAuthorName())
+                .title(fromDb.getTitle())
                 .build();
     }
 

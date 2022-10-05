@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -44,18 +43,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         return http
                 .headers().frameOptions().disable().and()
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests(auth -> {
-                    auth.antMatchers("/api/user/save").permitAll();
-                    auth.antMatchers("/api/auth/login").permitAll();
-                    auth.antMatchers("/api/auth/helloWorld").permitAll();
-                    auth.antMatchers("/api/auth/admin").hasAuthority("ADMIN");
+                    auth.antMatchers(HttpMethod.POST , "/api/user/save").permitAll();
+                    auth.antMatchers(HttpMethod.POST , "/api/auth/login").permitAll();
+                    auth.antMatchers(HttpMethod.GET,"/api/auth/helloWorld").permitAll();
+                    auth.antMatchers(HttpMethod.GET , "/api/auth/admin").hasAuthority("ADMIN");
                     auth.antMatchers(HttpMethod.DELETE,"/api/v1.0/book/deleteBook/{id}").hasAuthority("ADMIN");
-                    auth.antMatchers("/api/auth/only/user").hasAuthority("USER");
-                    auth.antMatchers("/api/auth/user").hasAnyAuthority("ADMIN", "USER");
+                    auth.antMatchers(HttpMethod.GET , "/api/auth/only/user").hasAuthority("USER");
+                    auth.antMatchers(HttpMethod.GET , "/api/auth/user").hasAnyAuthority("ADMIN", "USER");
                     auth.anyRequest().authenticated();
                 })
                 .formLogin().disable()
@@ -82,6 +82,9 @@ public class SecurityConfig {
             }
         };
     }
+
+
+
 
 
 

@@ -5,6 +5,8 @@ import com.example.dtos.LoginRequest;
 import com.example.dtos.TokenResponseDto;
 import com.example.service.AuthService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,6 +50,12 @@ public class AuthController {
     @GetMapping("/helloWorld")
     public String foo4(){
         return "Hello World";
+    }
+
+
+    @GetMapping("foo5")
+    public String foo5(){
+        return ( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).toString();
     }
 
 
