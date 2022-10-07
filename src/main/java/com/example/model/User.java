@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +17,10 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity implements Serializable {
 
 
-    @Column(name = "email" , unique = true)
+    @Column(name = "username" , unique = true)
     private String username;
 
 
@@ -31,7 +32,7 @@ public class User extends BaseEntity{
     private Role role;
 
 
-    @Column(name = "email" , insertable = false , updatable = false)
+    @Column(name = "email" , insertable = true , updatable = false)
     private String email;
 
 

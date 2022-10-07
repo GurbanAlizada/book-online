@@ -5,6 +5,7 @@ import com.example.dtos.LoginRequest;
 import com.example.dtos.TokenResponseDto;
 import com.example.service.AuthService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1.0/auth")
 public class AuthController {
 
 
@@ -25,6 +26,7 @@ public class AuthController {
 
 
 
+    // @PreAuthorize("")
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequest request){
         return ResponseEntity.ok( authService.login(request));
@@ -56,6 +58,12 @@ public class AuthController {
     @GetMapping("foo5")
     public String foo5(){
         return ( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).toString();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/deneme")
+    public String foo6(){
+        return "PreAuthorize kullanimi";
     }
 
 

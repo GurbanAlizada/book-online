@@ -35,6 +35,8 @@ public class BookService {
     @Transactional
     public BookListItemResponse save(SaveBookRequest request){
 
+        User user = userService.findByUserName(authService.getAuthenticatedUser().getUsername());
+
       Category category = categoryService.loadCategory(request.getCategoryId());
 
       final Book book = Book.builder()
@@ -42,6 +44,7 @@ public class BookService {
                 .bookStatus(request.getBookStatus())
                 .authorName(request.getAuthorName())
                 .title(request.getTitle())
+                .user(user)
                 .lastPageNumber(request.getLastPageNumber())
                 .totalPage(request.getTotalPage())
                 .publisher(request.getPublisher())
@@ -136,6 +139,7 @@ public class BookService {
                 .map(n->
         BookResponse.builder()
                 .id(n.getId())
+                .authorName(n.getAuthorName())
         //        .imageUrl(n.getImage().getImageUrl())
                 .build())
                 .collect(Collectors.toList());
@@ -162,7 +166,8 @@ public class BookService {
 
 
     @Transactional
-    public BookResponse updateLastPageNumber(Long bookId , int pageNo){
+    public BookResponse updateLastPageNumber( Long bookId, int pageNo){
+
 
         Book book = bookRepository.findById(bookId).orElseThrow(()->new GenericException(HttpStatus.NOT_FOUND , ErrorCode.BOOK_NOT_FOUNDED));
         book.setLastPageNumber(pageNo);

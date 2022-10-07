@@ -27,11 +27,11 @@ public class TokenGenerator {
 
     @Value("${jwt-variables.EXPIRES_ACCESS_TOKEN_MINUTE}")
     private Integer EXPIRES_ACCESS_TOKEN_MINUTE;
-    // 1
+    // 15
 
 
     public String generateToken(Authentication auth) {
-
+     //   System.out.println("aaaa" + auth.getAuthorities());
         /*
         ( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).toString();
         Authentication aaa = SecurityContextHolder.getContext().getAuthentication();

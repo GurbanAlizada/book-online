@@ -9,7 +9,6 @@ import com.example.repository.UserRepository;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +28,7 @@ public class UserService {
 
     public UserDto createUser(UserRequest request){
 
-        User user  = User.builder()
+        var user  = User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .username(request.getUsername())
@@ -39,7 +38,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
-        UserDto result = UserDto.builder()
+        var result = UserDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .username(user.getUsername())
@@ -52,9 +51,15 @@ public class UserService {
 
 
     public User findByUserName(String username){
-        var fromDb = userRepository.getByUsername(username).orElseThrow(()-> new GenericException(HttpStatus.NOT_FOUND , ErrorCode.USER_NOT_FOUNDED , "User not found by given id"));
+        var fromDb = userRepository.getByUsername(username)
+                .orElseThrow(()-> new GenericException(
+                        HttpStatus.NOT_FOUND ,
+                        ErrorCode.USER_NOT_FOUNDED ,
+                        "User not found by given id"));
         return fromDb;
     }
+
+
 
 
     public UserDto getUserDto(String username) {
@@ -66,6 +71,9 @@ public class UserService {
                 .role(user.getRole())
                 .build();
     }
+
+
+
 
 
 }

@@ -20,9 +20,8 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
     private final TokenGenerator tokenGenerator;
-
+    private final UserService userService;
 
     public AuthService(AuthenticationManager authenticationManager, UserService userService, TokenGenerator tokenGenerator) {
         this.authenticationManager = authenticationManager;
@@ -33,7 +32,6 @@ public class AuthService {
     public TokenResponseDto login(LoginRequest loginRequest) {
         try {
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
             return TokenResponseDto
                     .builder()
                     .token(tokenGenerator.generateToken(auth))
@@ -46,7 +44,11 @@ public class AuthService {
                     .errorMessage("Invalid Username or Password !!!")
                     .build();
         }
+
     }
+
+
+
 
     public UserDto getAuthenticatedUser() {
         String username = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
