@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class AuthService {
 
@@ -34,7 +36,7 @@ public class AuthService {
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             return TokenResponseDto
                     .builder()
-                    .token(tokenGenerator.generateToken(auth))
+                    .tokens(tokenGenerator.generateToken(auth))
                     .userDto(userService.getUserDto(loginRequest.getUsername()))
                     .build();
         } catch (final BadCredentialsException badCredentialsException) {
@@ -45,17 +47,17 @@ public class AuthService {
                     .build();
         }
 
+
     }
 
 
-
-
     public UserDto getAuthenticatedUser() {
-        String username = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         return userService.getUserDto(username);
     }
 
 
 
 
-}
+    }
+

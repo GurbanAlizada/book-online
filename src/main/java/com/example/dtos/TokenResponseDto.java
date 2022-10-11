@@ -6,13 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class TokenResponseDto {
 
-    private String token;
+    private Map<String ,String> tokens;
 
     private UserDto userDto;
 

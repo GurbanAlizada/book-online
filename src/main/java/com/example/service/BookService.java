@@ -6,15 +6,14 @@ import com.example.dtos.BookResponse;
 import com.example.dtos.SaveBookRequest;
 import com.example.exception.ErrorCode;
 import com.example.exception.GenericException;
-import com.example.model.Book;
-import com.example.model.BookStatus;
-import com.example.model.Category;
-import com.example.model.User;
+import com.example.model.*;
 import com.example.repository.BookRepository;
+import com.example.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +28,7 @@ public class BookService {
     private final CategoryService categoryService;
     private final AuthService authService;
     private final UserService userService;
-
+    private final ImageRepository imageRepository;
 
 
     @Transactional
@@ -78,7 +77,7 @@ public class BookService {
                       .id(n.getId())
                       .title(n.getTitle())
                       .authorName(n.getAuthorName())
-              //        .imageUrl(n.getImage().getImageUrl())
+                      .imageUrl(n.getImage().getImageUrl())
                       .build())
                 .collect(Collectors.toList());
 
@@ -100,7 +99,7 @@ public class BookService {
                                 .id(n.getId())
                                 .title(n.getTitle())
                                 .authorName(n.getAuthorName())
-              //                  .imageUrl(n.getImage().getImageUrl())
+                                .imageUrl(n.getImage().getImageUrl())
                                 .build())
                 .collect(Collectors.toList());
 
@@ -119,7 +118,7 @@ public class BookService {
                                 .id(n.getId())
                                 .title(n.getTitle())
                                 .authorName(n.getAuthorName())
-              //                  .imageUrl(n.getImage().getImageUrl())
+                                .imageUrl(n.getImage().getImageUrl())
                                 .build())
                 .collect(Collectors.toList());
 
@@ -140,7 +139,7 @@ public class BookService {
         BookResponse.builder()
                 .id(n.getId())
                 .authorName(n.getAuthorName())
-        //        .imageUrl(n.getImage().getImageUrl())
+                .imageUrl(n.getImage().getImageUrl())
                 .build())
                 .collect(Collectors.toList());
         return result;
@@ -156,7 +155,7 @@ public class BookService {
                         .id(n.getId())
                         .authorName(n.getAuthorName())
                         .title(n.getTitle())
-        //                .imageUrl(n.getImage().getImageUrl())
+                        .imageUrl(n.getImage().getImageUrl())
                         .build())
                 .collect(Collectors.toList());
 
@@ -176,6 +175,7 @@ public class BookService {
         return BookResponse.builder()
                 .id(bookId)
                 .authorName(fromDb.getAuthorName())
+                .imageUrl(fromDb.getImage().getImageUrl())
                 .title(fromDb.getTitle())
                 .build();
     }
@@ -189,12 +189,26 @@ public class BookService {
         return BookResponse.builder()
                 .title(book.getTitle())
                 .authorName(book.getAuthorName())
+                .imageUrl(book.getImage().getImageUrl())
                 .id(book.getId())
                 .build();
     }
 
 
 
+
+    @Transactional
+    @Async
+    public void saveImage(Long bookId, String imageUrl) {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> GenericException.builder().errorCode(ErrorCode.BOOK_NOT_FOUNDED).build());
+        final Image image = book.getImage();
+        if (image == null) {
+            book.setImage(imageRepository.save(Image.builder().imageUrl(imageUrl).build()));
+        } else {
+            image.setImageUrl(imageUrl);
+        }
+        bookRepository.save(book);
+    }
 
 
 }

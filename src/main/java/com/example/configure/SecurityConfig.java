@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .authorizeRequests(auth -> {
                     auth.antMatchers(HttpMethod.POST, "/api/v1.0/user/save").permitAll();
                     auth.antMatchers(HttpMethod.POST, "/api/v1.0/auth/login").permitAll();
-                    auth.antMatchers(HttpMethod.GET, "/api/auth/helloWorld").permitAll();
+                    auth.antMatchers(HttpMethod.GET, "/api/auth/helloWorld" , "/api/v1.0/auth/token/refresh").permitAll();
                     auth.antMatchers(HttpMethod.GET, "/api/v1.0/auth/admin").hasAuthority("ADMIN");
                     auth.antMatchers(HttpMethod.DELETE, "/api/v1.0/book/deleteBook/{id}").hasAuthority("ADMIN");
                     auth.antMatchers(HttpMethod.GET, "/api/v1.0/auth/only/user").hasAuthority("USER");
