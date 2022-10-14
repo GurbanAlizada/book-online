@@ -36,7 +36,15 @@ public class CloudServiceImpl implements CloudServiceInter {
         File file = null;
         try {
             file = convert(multipartFile);
+
+            cloudinary.url()
+                    .transformation(new Transformation()
+                            .rawTransformation("w_100,h_150,c_fill"))
+                    .imageTag(file.getName());
+
             Map result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+
+
             file.delete();
 
 
