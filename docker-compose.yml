@@ -1,4 +1,4 @@
-version: '3.8'
+version: '2'
 
 services:
 
@@ -11,44 +11,42 @@ services:
     networks:
       - shared-net
 
-  mysqldb:
-    image: mysql:8
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: 1234
-      MYSQL_DATABASE: book_online
-      MYSQL_USER: root
+  db:
+    image: postgres
+    container_name: db
     ports:
-      - "3366:3306"
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
     networks:
       - shared-net
-    volumes:
-      - ./mysql/data:/backup
-
-
 
   app:
-    image: book-online-spring-boot
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    ports:
-      - 8082:8082
-    depends_on:
-      - mysqldb
-    environment:
-      - spring.datasource.url=jdbc:mysql://mysqldb:3306/book_online
-      - SERVER_PORT=8082
-      - spring.redis.host=redis
-      - spring.redis.port=6379
-      - spring.datasource.username=root
-      - spring.datasource.password=1234
-    restart: always
-    networks:
-      - shared-net
+      image: book-online-spring-boot
+      build:
+        context: ./
+        dockerfile: Dockerfile
+      ports:
+        - 8082:8080
+      depends_on:
+       # - mysqldb
+        - db
+      environment:
+      #  - spring.datasource.url=jdbc:mysql://mysqldb:3306/book_online
+       # - SERVER_PORT=8082
+        #- spring.redis.host=redis
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/book_online?createDatabaseIfNotExist=true
+        - SPRING_DATASOURCE_USERNAME=compose-postgres
+        - SPRING_DATASOURCE_PASSWORD=compose-postgres
+        - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      #  - spring.redis.port=6379
+      #  - spring.datasource.username=root
+      #  - spring.datasource.password=1234
+      restart: always
+      networks:
+        - shared-net
 
 networks:
   shared-net:
     driver: bridge
-
