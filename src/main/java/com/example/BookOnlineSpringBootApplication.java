@@ -12,3 +12,6 @@ public class BookOnlineSpringBootApplication   {
 
 
 }
+
+
+// Annotation Based code generation build time ı 2 katına çıkarıyor

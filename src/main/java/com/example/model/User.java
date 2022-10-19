@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @ToString
 @Builder
 @Entity
@@ -41,4 +41,11 @@ public class User extends BaseEntity implements Serializable {
     private List<Book> books = new ArrayList<>();
 
 
+
+    public User(Long id, String username, String password) {
+        super(id , null , null);
+        this.username = username;
+        this.password = password;
+
+    }
 }
