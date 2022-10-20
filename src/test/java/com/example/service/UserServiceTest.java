@@ -31,15 +31,18 @@ class UserServiceTest {
 
     private UserService userService;
     private UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder;
+
 
     @BeforeEach
     public void setUp(){
         userRepository = Mockito.mock(UserRepository.class);
-        userService = new UserService(userRepository , null);
+        passwordEncoder = Mockito.mock(BCryptPasswordEncoder.class);
+        userService = new UserService(userRepository , passwordEncoder);
     }
 
 
-    /*
+
 
     @Test
     public void itShouldCreateUser(){
@@ -57,15 +60,15 @@ class UserServiceTest {
                 .email(userRequest.getEmail())
                 .role(userRequest.getRole())
                 .build();
+        user.setId(1L);
 
-
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        when(passwordEncoder.encode(user.getPassword())).thenReturn(user.getPassword());
 
         when(userRepository.save(user)).thenReturn(user);
 
 
-        UserDto userDto  = UserDto.builder()
-                .id(0)
+        UserDto expected  = UserDto.builder()
+                .id(1L)
                 .username(user.getUsername())
                 .role(user.getRole())
                 .email(user.getEmail())
@@ -74,13 +77,14 @@ class UserServiceTest {
         UserDto actual = userService.createUser(userRequest);
 
 
-        assertEquals(userDto , actual);
+        assertEquals(expected.getUsername() , actual.getUsername());
+        assertEquals(expected , actual);
 
 
     }
 
 
-     */
+
 
     @Test
     public void itShouldReturnUserByUsername_whenUserExists(){
@@ -125,36 +129,51 @@ class UserServiceTest {
 
 
 
-    /*
+
 
     @Test
-    public void itShouldReturnUserDtoByUsername_whenUserExists(){
+    public void testGetUserDto_whenUserExists_itShouldReturnUserDto(){
 
         String username = "test-username";
 
         User user  = User.builder()
                 .username(username)
+                .password("password")
+                .role(Role.USER)
                 .build();
+        user.setId(1L);
+
+        when(userRepository.getByUsername(username)).thenReturn(Optional.of(user));
 
         UserDto expected = UserDto.builder()
+                .id(1L)
                 .username(user.getUsername())
+                .role(Role.USER)
                 .build();
 
-
-
-
-        when(userService.findByUserName(username)).thenReturn(user);
-        //when(userRepository.getByUsername(username)).thenReturn(Optional.of(user));
 
 
         UserDto actual = userService.getUserDto(username);
 
-        assertEquals(expected , actual);
-      //  verify(userRepository , times(1)).getByUsername(username);
+        assertEquals(expected.getUsername() , actual.getUsername());
+       verify(userRepository , times(1)).getByUsername(username);
 
     }
 
 
-     */
+
+    @Test
+    public void testGetUserDto_whenUserDoesNotExists_itShouldThrowException(){
+
+        when(userRepository.getByUsername(Mockito.anyString())).thenReturn(Optional.empty());
+
+        assertThrows(GenericException.class , () -> userService.getUserDto(Mockito.anyString()));
+
+         verify(userRepository , times(1)).getByUsername(Mockito.anyString());
+
+    }
+
+
+
 
 }

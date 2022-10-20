@@ -36,12 +36,12 @@ public class UserService {
                 .build();
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+      var fromDb =   userRepository.save(user);
 
         var result = UserDto.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .username(user.getUsername())
+                .id(fromDb.getId())
+                .email(fromDb.getEmail())
+                .username(fromDb.getUsername())
                 .role(user.getRole())
                 .build();
 
@@ -52,10 +52,7 @@ public class UserService {
 
     public User findByUserName(String username){
         var fromDb = userRepository.getByUsername(username)
-                .orElseThrow(()-> new GenericException(
-                        HttpStatus.NOT_FOUND ,
-                        ErrorCode.USER_NOT_FOUNDED ,
-                        "User not found by given id"));
+                .orElseThrow(()-> new GenericException(HttpStatus.NOT_FOUND , ErrorCode.USER_NOT_FOUNDED , "User not found by given id"));
         return fromDb;
     }
 
