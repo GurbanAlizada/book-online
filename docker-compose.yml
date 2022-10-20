@@ -21,6 +21,9 @@ services:
       - POSTGRES_PASSWORD=compose-postgres
     networks:
       - shared-net
+    volumes:
+    - ./postgres-data:/var/lib/postgresql/data
+
 
   app:
       image: book-online-spring-boot

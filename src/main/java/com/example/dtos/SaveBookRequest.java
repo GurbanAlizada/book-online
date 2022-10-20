@@ -1,12 +1,16 @@
 package com.example.dtos;
 
 import com.example.model.BookStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 
+@AllArgsConstructor
+@Builder
 @Data
 public final class SaveBookRequest {
 

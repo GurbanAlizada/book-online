@@ -34,7 +34,7 @@ public class BookService {
     @Transactional
     public BookListItemResponse save(SaveBookRequest request){
 
-        User user = userService.findByUserName(authService.getAuthenticatedUser().getUsername());
+      User user = userService.findByUserName(authService.getAuthenticatedUser().getUsername());
 
       Category category = categoryService.loadCategory(request.getCategoryId());
 
@@ -67,7 +67,7 @@ public class BookService {
 
     public List<BookResponse> listBooks(int pageNo , int size){
 
-        final List<Book> books =  bookRepository.findAll(PageRequest.of(pageNo - 1 , size)).getContent();
+        final List<Book> books =  bookRepository.findAll(PageRequest.of(pageNo -1 , size)).getContent();
 
         User user = userService.findByUserName(authService.getAuthenticatedUser().getUsername());
 

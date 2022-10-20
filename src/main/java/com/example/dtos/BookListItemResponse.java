@@ -4,6 +4,7 @@ package com.example.dtos;
 import com.example.model.BookStatus;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.io.File;

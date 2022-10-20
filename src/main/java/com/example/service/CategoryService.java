@@ -26,7 +26,7 @@ public class CategoryService {
 
 
     public Category getByCategoryName(String categoryName){
-          Category result =   categoryRepository.getByCategoryName(categoryName).orElseThrow( ()->new GenericException(HttpStatus.NOT_FOUND , ErrorCode.CATEGORY_NOT_FOUNDED ));
+          Category result =   categoryRepository.getByCategoryName(categoryName).orElseThrow( ()->new GenericException(HttpStatus.NOT_FOUND , ErrorCode.CATEGORY_NOT_FOUNDED));
           return result;
     }
 
