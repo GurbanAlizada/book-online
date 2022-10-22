@@ -23,9 +23,6 @@ public class BookRestController {
     private final BookService bookService;
 
 
-    // https://bitbucket.org/furkannzmnn/library/src/master/src/
-
-
 
     @PostMapping("/save")
     public ResponseEntity<BookListItemResponse> save(@Valid @RequestBody SaveBookRequest request){

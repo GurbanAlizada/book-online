@@ -346,10 +346,6 @@ class BookServiceTest {
         assertThrows(GenericException.class , ()-> bookService.searchByBookStatus(BookStatus.READED));
 
     }
-
-
-
-
     @Test
     public void testSearchByTitle_whenBooksExistsGivenTitle_itShouldReturnBookResponse(){
         String title = "title";
@@ -429,12 +425,7 @@ class BookServiceTest {
         assertEquals(expected.getAuthorName() , actual.getAuthorName());
         verify(bookRepository , times(1)).findById(bookId);
 
-
-
-
-
     }
-
 
     @Test
     public void testUpdateLastPageNumber_whenBookDoesNotExist_itShouldReturnBookResponse(){
@@ -443,10 +434,7 @@ class BookServiceTest {
         assertThrows(GenericException.class , ()-> bookService.updateLastPageNumber(Mockito.anyLong() , 2));
 
     }
-
-
-
-
+    
     @Test
     public void testDelete_whenBookExists_itShouldBookResponse(){
         Long id = 1L;
