@@ -101,7 +101,7 @@ class CategoryServiceTest {
     public void testSaveCategory_itShouldSaveCategory(){
         SaveCategoryRequest request = new SaveCategoryRequest("test-category");
         Category category = Category.builder()
-                .categoryName(request.getCatgoryName())
+                .categoryName(request.getCategoryName())
                 .build();
 
         when(categoryRepository.save(category)).thenReturn(category);

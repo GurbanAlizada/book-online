@@ -1,15 +1,16 @@
 package com.example.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
+@Data
 @AllArgsConstructor
+@Builder
+@NoArgsConstructor
 public class SaveCategoryRequest {
 
     @NotBlank
-    private String catgoryName;
+    private String categoryName;
 
 }

@@ -1,17 +1,15 @@
 package com.example.api;
 
-
 import com.example.dtos.BookListItemResponse;
 import com.example.dtos.BookResponse;
 import com.example.dtos.SaveBookRequest;
-import com.example.model.Book;
 import com.example.model.BookStatus;
 import com.example.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 

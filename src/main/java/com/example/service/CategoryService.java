@@ -34,7 +34,7 @@ public class CategoryService {
     @Transactional
     public Category save(SaveCategoryRequest request){
         Category category = Category.builder()
-                .categoryName(request.getCatgoryName())
+                .categoryName(request.getCategoryName())
                 .build();
         Category fromDb = categoryRepository.save(category);
         return fromDb;
