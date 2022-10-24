@@ -4,6 +4,7 @@ import com.example.model.BookStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import java.io.File;
 @AllArgsConstructor
 @Builder
 @Data
+@NoArgsConstructor
 public final class SaveBookRequest {
 
 
@@ -21,7 +23,7 @@ public final class SaveBookRequest {
     @NotBlank
     private String authorName;
 
-    @NotBlank
+    // @NotBlank
     private String publisher;
 
     @NotNull
