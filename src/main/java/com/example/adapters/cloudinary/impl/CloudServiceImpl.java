@@ -34,16 +34,15 @@ public class CloudServiceImpl implements CloudServiceInter {
     @Override
     public String uploadImage(MultipartFile multipartFile) {
         File file = null;
+        String url = null;
         try {
             file = convert(multipartFile);
 
-            cloudinary.url()
-                    .transformation(new Transformation()
-                            .rawTransformation("w_100,h_150,c_fill"))
-                    .imageTag(file.getName());
+            Map<String, String> result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
 
-            Map result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+            String s =  String.valueOf(result);
 
+             url =  s.substring(97,181);
 
             file.delete();
 
@@ -52,11 +51,9 @@ public class CloudServiceImpl implements CloudServiceInter {
             e.printStackTrace();
         }
 
-        return "http://res.cloudinary.com/alizada/image/upload/v1659467567/"+file.getName();
+        return url;
     }
 
-    // http://res.cloudinary.com/alizada/image/upload/v1659467567/hmwvtnt1qqpelevibg5s.jpg
-    // http://res.cloudinary.com/alizada/image/upload/v1659467417/b61tjdqlihztitzylqjx.png
 
 
     private File convert(final MultipartFile multipartFile) {
